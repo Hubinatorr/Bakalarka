@@ -59,10 +59,15 @@ public class Drones : MonoBehaviour
         float distance = Vector3.Distance(drones[0].transform.position, item.transform.position);
         Debug.Log(distance);   
     }
-
+    
     public static void LookFunction(int i){
         Transform Camera = drones[0].transform.Find("CameraBox/MainCameraPair");
         Debug.Log(Camera.gameObject.name);
         Camera.LookAt(Drones.drones[i].transform);
+    }
+
+    public static void DontLookFunction(int i){
+        Transform Camera = drones[0].transform.Find("CameraBox/MainCameraPair");
+        Camera.LookAt(Drones.drones[0].transform);
     }
 }

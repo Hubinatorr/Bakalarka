@@ -288,7 +288,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 1
       - m_Target: {fileID: -3301561187831129008}
-        m_MethodName: LookDrone
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -336,7 +336,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: -3301561187831129008}
-          m_MethodName: 
+          m_MethodName: LookDrone
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -351,7 +351,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: -3301561187831129008}
-          m_MethodName: 
+          m_MethodName: DontLookDrone
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -373,4 +373,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5fbdd98caa134e24b07ee3732f5b04f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Camera: {fileID: 0}

@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.SceneManagement;
 using Mapbox.Unity.Map;
 using TMPro;
 
@@ -32,10 +32,24 @@ public class GuiController : MonoBehaviour
     public Button DefineAreaButton;
     public Button ShowAreaButton;
     public Button ModeButton;
+    public Button MinimapButton;
+    public RawImage MinimapRawImage;
 
     public GameObject WayPointPanel;
 
     public GameObject ClickModePanel;
+
+    public int MinimapState = 0;
+
+    // Mapa premenne
+    public GameObject MainCanvas;
+    public GameObject MapCanvas;
+    public GameObject MainCameras;
+    public GameObject MapCamera;
+
+    
+
+    
 
     // Start is called before the first frame update
     void Start()
@@ -89,7 +103,11 @@ public class GuiController : MonoBehaviour
             droneController.changeDataSource(2);
             changeModeIcon();
         }
+
     }
+
+
+
 
     public void changeModeIcon()
     {
@@ -116,6 +134,16 @@ public class GuiController : MonoBehaviour
         switchButton(ScreenButton, droneController.isVideoScreenActive);
         switchButton(ProjectorButton, droneController.isProjectorActive);
     }
+
+    public void OpenMap()
+    {
+        ShowBuildings.BuildingsHidden = true;
+        MainCanvas.gameObject.SetActive(false);
+        MapCanvas.gameObject.SetActive(true);
+        MainCameras.gameObject.SetActive(false);
+        MapCamera.gameObject.SetActive(true);
+    }
+
 
     public void HomeButtonClick()
     {
