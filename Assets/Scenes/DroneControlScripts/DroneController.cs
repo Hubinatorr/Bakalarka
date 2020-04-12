@@ -44,6 +44,9 @@ public class DroneController : MonoBehaviour {
         positionDataS = new DroneData(Map, transform.position);
         positionData = positionDataM = new DroneDataManual(Map, transform.position);
         positionDataR = new DroneRosData(Map, transform.position);
+        //DisplayDrones.dronesList.Add(transform.gameObject);
+        Drones.drones.Add(transform.gameObject);
+        Debug.Log(transform.name + "added");
     }
 
     public void ConnectToRos()  // může být voláno z GUI
@@ -127,7 +130,7 @@ public class DroneController : MonoBehaviour {
             dataSource = 2;
             Debug.Log("přepnuto vstup z ros");
             positionData = positionDataR;
-            positionData.reset(pos,rot); //reset rychlosti akcelerace
+            // positionData.reset(pos,rot); //reset rychlosti akcelerace
         }
 
         return dataSource;
