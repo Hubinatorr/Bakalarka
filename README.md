@@ -1,1 +1,2 @@
 # Bakalarka
+Chcem sa zabit
