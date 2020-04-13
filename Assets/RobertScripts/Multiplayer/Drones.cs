@@ -67,16 +67,35 @@ public class Drones : MonoBehaviour
         icon.transform.SetParent(iconTargetTransform);
         icon.name = "icon" + item.name;
         icon.transform.localScale = new Vector3(1,1,1);
+        Color col = new Color(
+        Random.Range(0f, 1f), 
+        Random.Range(0f, 1f), 
+        Random.Range(0f, 1f)
+        );
+        icon.GetComponent<Image>().color = col;
+
+        droneDisplay.transform.Find("Image").GetComponent<Image>().color = col;
     }
     
     public static void LookFunction(int i){
-        Transform Camera = drones[0].transform.Find("CameraBox/MainCameraPair");
-        Debug.Log(Camera.gameObject.name);
-        Camera.LookAt(Drones.drones[i].transform);
+        if(GuiController.isMap){
+            Vector3 newPosition = drones[i].transform.position;
+            newPosition.y = Camera.main.transform.position.y;
+            Camera.main.transform.position = newPosition;
+        } else {
+            Transform Camera = drones[0].transform.Find("CameraBox/MainCameraPair");
+            Debug.Log(Camera.gameObject.name);
+            Camera.LookAt(Drones.drones[i].transform);
+        }
+        
     }
 
     public static void DontLookFunction(int i){
+        if(GuiController.isMap){
+
+        } else {
         Transform Camera = drones[0].transform.Find("CameraBox/MainCameraPair");
         Camera.LookAt(Drones.drones[0].transform);
+        }
     }
 }

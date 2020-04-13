@@ -48,7 +48,7 @@ public class GuiController : MonoBehaviour
     public GameObject MapCamera;
 
     
-
+    public static bool isMap = false;
     
 
     // Start is called before the first frame update
@@ -137,6 +137,7 @@ public class GuiController : MonoBehaviour
 
     public void OpenMap()
     {
+        isMap = true;
         ShowBuildings.BuildingsHidden = true;
         MainCanvas.gameObject.SetActive(false);
         MapCanvas.gameObject.SetActive(true);

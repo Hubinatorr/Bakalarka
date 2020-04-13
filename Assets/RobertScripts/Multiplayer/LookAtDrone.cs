@@ -7,7 +7,6 @@ using System;
 public class LookAtDrone : MonoBehaviour
 {
     private Text[] droneName;
-    
     private Transform defaultView;
     int i;
     public void LookDrone(){

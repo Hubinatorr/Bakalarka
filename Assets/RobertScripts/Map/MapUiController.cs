@@ -31,6 +31,7 @@ public class MapUiController : MonoBehaviour
 
     public void BackToDroneView()
     {
+        GuiController.isMap = false;
         ShowBuildings.BuildingsHidden = false;
         MainCanvas.gameObject.SetActive(true);
         MapCanvas.gameObject.SetActive(false);
