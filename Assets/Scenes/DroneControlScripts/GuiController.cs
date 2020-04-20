@@ -182,7 +182,7 @@ public class GuiController : MonoBehaviour
 
         int i = 0;
         List<NavigationPoint> points = navigationController.getPoints();
-        WayPointPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(155, 3 * 32 + points.Count * 32);
+        // WayPointPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(155, 3 * 32 + points.Count * 32);
 
         foreach (NavigationPoint point in points)
         {

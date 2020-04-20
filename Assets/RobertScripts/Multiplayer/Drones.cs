@@ -7,6 +7,9 @@ using UnityEngine.UI;
 public class Drones : MonoBehaviour
 {
     public static List<GameObject> drones = new List<GameObject>();
+
+    public static List<GameObject> icones = new List<GameObject>();
+
     public Transform tarfetTransform;
     public GameObject dronesPrefab;
     private Text[] droneName;
