@@ -1,0 +1,87 @@
+{
+    "checkpoints":[
+        {
+            "type":"regular",
+            "name":"Point 1",
+            "points":[
+                {
+                    "height": 80,
+                    "latitude": 49.228634,
+                    "longitude": 16.597110
+                }
+            ]    
+        }
+        ,
+        {
+            "type":"zone",
+            "name":"Zone 1",
+            "points":[
+                {
+                    "height": 60,
+                    "latitude": 49.227873,
+                    "longitude": 16.593042
+                },
+                {
+                    "height": 60,
+                    "latitude": 49.227677,
+                    "longitude": 16.592647
+                },
+                {
+                    "height": 60,
+                    "latitude":49.227144,
+                    "longitude": 16.593011
+                },
+                {
+                    "height": 60,
+                    "latitude": 49.227268,
+                    "longitude": 16.593334
+                }
+            ]
+        }
+        ,
+        {
+            "type":"zone",
+            "name":"Zone 2",
+            "points":[
+                {
+                    "height": 90,
+                    "latitude": 49.226723,
+                    "longitude": 16.592666
+                },
+                {
+                    "height": 90,
+                    "latitude": 49.225436, 
+                    "longitude": 16.593519
+                },
+                {
+                    "height": 90,
+                    "latitude":49.224194, 
+                    "longitude": 16.590959
+                },
+                {
+                    "height": 90,
+                    "latitude": 49.224661, 
+                    "longitude": 16.588329
+                }
+                ,
+                {
+                    "height": 90,
+                    "latitude": 49.225936, 
+                    "longitude": 16.586891
+                }
+                ,
+                {
+                    "height": 90,
+                    "latitude": 49.228810, 
+                    "longitude": 16.587542
+                }
+                ,
+                {
+                    "height": 90,
+                    "latitude": 49.231628, 
+                    "longitude": 16.589032
+                }
+            ]
+        }
+    ]
+}
