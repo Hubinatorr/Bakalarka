@@ -1,4 +1,22 @@
 {
+    "drones":[
+        {
+            "name":"Drone1",
+            "latitude":"49.226637",
+            "longitude": "16.597903"
+        },
+        {
+            "name":"Drone2",
+            "latitude":"49.226637",
+            "longitude": "16.597903"
+        },
+        {
+            "name":"Drone3",
+            "latitude":"49.226020",
+            "longitude":"16.597149"
+        }
+    ],
+
     "checkpoints":[
         {
             "type":"regular",
@@ -10,38 +28,22 @@
                     "longitude": 16.597110
                 }
             ]    
-        }
-        ,
+        },
+        {
+            "type":"regular",
+            "name":"Point 2",
+            "points":[
+                {
+                    "height": 80,
+                    "latitude": 49.228634,
+                    "longitude": 16.597110
+                }
+            ]    
+        },
+
         {
             "type":"zone",
             "name":"Zone 1",
-            "points":[
-                {
-                    "height": 60,
-                    "latitude": 49.227873,
-                    "longitude": 16.593042
-                },
-                {
-                    "height": 60,
-                    "latitude": 49.227677,
-                    "longitude": 16.592647
-                },
-                {
-                    "height": 60,
-                    "latitude":49.227144,
-                    "longitude": 16.593011
-                },
-                {
-                    "height": 60,
-                    "latitude": 49.227268,
-                    "longitude": 16.593334
-                }
-            ]
-        }
-        ,
-        {
-            "type":"zone",
-            "name":"Zone 2",
             "points":[
                 {
                     "height": 90,
@@ -80,6 +82,33 @@
                     "height": 90,
                     "latitude": 49.231628, 
                     "longitude": 16.589032
+                }
+            ]
+        },
+
+        {
+            "type":"zone",
+            "name":"Zone 2",
+            "points":[
+                {
+                    "height": 60,
+                    "latitude": 49.227873,
+                    "longitude": 16.593042
+                },
+                {
+                    "height": 60,
+                    "latitude": 49.227677,
+                    "longitude": 16.592647
+                },
+                {
+                    "height": 60,
+                    "latitude":49.227144,
+                    "longitude": 16.593011
+                },
+                {
+                    "height": 60,
+                    "latitude": 49.227268,
+                    "longitude": 16.593334
                 }
             ]
         }

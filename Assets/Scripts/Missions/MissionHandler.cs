@@ -8,11 +8,28 @@ public class MissionHandler : MonoBehaviour
     public AbstractMap Map;
     private string path;
     private string jsonContent;
+    public GameObject newDrone;
+    public Transform ourDrone;
+    private int droneNumber = 1;
+    public Transform tarfetTransform;
+    public GameObject dronesPrefab;
 
+    public Transform iconTransform;
+    public GameObject icon;
     public GameObject WayPointPointerPrefab;
 
     private float groundAltitude;
+        public void addDrone(Vector3 position){ 
+            Vector3 newPosition =position;
 
+            GameObject Clone = Instantiate(newDrone, newPosition, ourDrone.rotation);
+            Clone.name = "DroneObject" + droneNumber.ToString();
+            Drones.drones.Add(Clone);
+            Drones.DroneAdded(tarfetTransform,dronesPrefab,iconTransform,icon);
+            Debug.Log(Clone.name + "added");
+            droneNumber++;
+        //Clone.GetComponent("DroneController").enabled = false;
+    }
     void Start()
     {
         int i = 0;
@@ -21,6 +38,17 @@ public class MissionHandler : MonoBehaviour
         Debug.Log(jsonContent);
         Mission mission = JsonUtility.FromJson<Mission>(jsonContent);
         // Iterate the points and spawn points
+
+        // Nastavime drony
+        foreach(var item in mission.drones){
+            Vector3 pos;
+            Mapbox.Utils.Vector2d p = new Mapbox.Utils.Vector2d(item.latitude,item.longitude);
+            pos = Map.GeoToWorldPosition(p,false);
+            groundAltitude = Map.QueryElevationInUnityUnitsAt(Map.WorldToGeoPosition(pos));
+            pos.y = groundAltitude;
+            addDrone(pos);
+        }
+
         foreach(var item in mission.checkpoints){
             if(item.type == "regular"){
                 GameObject WayPointPointerPrefab;
@@ -36,14 +64,20 @@ public class MissionHandler : MonoBehaviour
                 groundAltitude = Map.QueryElevationInUnityUnitsAt(Map.WorldToGeoPosition(position));
                 position.y = groundAltitude + (float)item.points[0].height;
                 WayPointPointer.transform.position = position;
+                WayPointPointer.name = item.name;
                 item.points[0].point = WayPointPointer;
             } else if(item.type == "zone"){
                 // Vytvor hranice zony
+                GameObject tmp = new GameObject(item.name);
+                tmp.transform.position = new Vector3(0,0,0);
+                tmp.transform.SetParent(transform);
                 foreach(var point in item.points){
                     GameObject WayPointPointerPrefab;
                     WayPointPointerPrefab = Resources.Load<GameObject>("Zones/ZoneWall");
+                    
                     GameObject WayPointPointer = Instantiate(WayPointPointerPrefab);
-                    WayPointPointer.transform.SetParent(transform);
+                    
+                    WayPointPointer.transform.SetParent(tmp.transform);
                         // Vytvor vektor z gps
                     Mapbox.Utils.Vector2d p = new Mapbox.Utils.Vector2d(point.latitude,point.longitude);
                         // // Ziskaj poziciu
@@ -95,8 +129,11 @@ public class MissionHandler : MonoBehaviour
 
 }
 
+
+
 [System.Serializable]
 public class Mission{
+    public List<Drone> drones;
     public List<Checkpoint> checkpoints;
 }
 [System.Serializable]
@@ -112,6 +149,12 @@ public class Point{
     public GameObject point;
     public double height;
     public double latitude;
+    public double longitude;    
+}
+
+[System.Serializable]
+public class Drone{
+    public string name;
+    public double latitude;
     public double longitude;
-    
 }

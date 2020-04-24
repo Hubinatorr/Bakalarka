@@ -13,11 +13,8 @@ public class AddDrone : MonoBehaviour
     public Transform iconTransform;
     public GameObject icon;
 
-    public void addDrone(){
-        Vector3 newPosition = ourDrone.position;
-        newPosition.x += 5;
-        newPosition.y += 5;
-        newPosition.z += 5;
+    public void addDrone(Transform position){
+        Vector3 newPosition = position.position;
 
         GameObject Clone = Instantiate(newDrone, newPosition, ourDrone.rotation);
         Clone.name = "DroneObject" + droneNumber.ToString();

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class IconManager : MonoBehaviour
 {
@@ -13,6 +14,10 @@ public class IconManager : MonoBehaviour
     // Start is called before the first frame update
     private bool _onScreen;
 
+    public GameObject Drone;
+
+
+    public int distanceOfSight = 50;
     
     private int i = 0;
     void Start()
@@ -30,6 +35,14 @@ public class IconManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        float minimumDistance = 50.0F;
+        float maximumDistance = 100.0F;
+        
+        float minimumDistanceScale = 1.0F;
+        float maximumDistanceScale = 0.1F;
+        
+        
+
         if(GuiController.isMap)
             cam = mapcam;
         else
@@ -37,6 +50,17 @@ public class IconManager : MonoBehaviour
 
         foreach(Transform child in iconTargetTransform.transform)
         {
+            Text text = child.GetComponentInChildren<Text>();
+            float dist = Vector3.Distance(Drones.drones[0].transform.position,Drones.drones[i].transform.position);
+            text.text = Mathf.Round(dist) + "m";
+            
+            float norm = (dist - minimumDistance) / (maximumDistance - minimumDistance);
+            norm = Mathf.Clamp01(norm);
+            
+            var minScale = Vector3.one * maximumDistanceScale;
+            var maxScale = Vector3.one * minimumDistanceScale;
+            
+            child.transform.localScale = Vector3.Lerp(maxScale, minScale, norm);
             // if(!Drones.drones[i].GetComponent<Renderer>().isVisible){
             //     child.gameObject.SetActive(false);
             // }
