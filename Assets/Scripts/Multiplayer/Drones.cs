@@ -18,9 +18,11 @@ public class Drones : MonoBehaviour
 
     private GameObject droneBody;
     private GameObject activeDrone;
+
+    public RenderTexture PopUpRenderTexture;
     private int i = 0;
     // Start is called before the first frame update
-    
+    public GameObject PopUp;
     void Start()
     {
         foreach(GameObject item in drones)
@@ -30,13 +32,9 @@ public class Drones : MonoBehaviour
             droneName = droneDisplay.GetComponentsInChildren<Text>();
             droneName[0].text = item.name;
             droneName[1].text = drones.Count.ToString();
-
-            // GameObject icon = (GameObject)Instantiate(iconPrefab);
-            // icon.transform.SetParent(iconTargetTransform);
-            // icon.name = "icon" + item.name;
-            // icon.transform.localScale = new Vector3(1,1,1);
-
-            // icon.GetComponent<Renderer>().material.color = 
+            droneDisplay.transform.localScale = new Vector3(1,1,1);
+            droneDisplay.GetComponent<LookAtDrone>().PopUp = PopUp;
+            droneDisplay.GetComponent<LookAtDrone>().RenderTexture = PopUpRenderTexture;
         }
     }
 
@@ -54,7 +52,7 @@ public class Drones : MonoBehaviour
         i=0;
     }
 
-    public static void DroneAdded(Transform tarfetTransform, GameObject dronesPrefab,Transform iconTargetTransform,GameObject iconPrefab)
+    public static void DroneAdded(Transform tarfetTransform, GameObject dronesPrefab,Transform iconTargetTransform,GameObject iconPrefab,GameObject PopUp,RenderTexture PopUpRenderTexture)
     {
         GameObject item = drones[drones.Count - 1];
         GameObject droneDisplay = (GameObject)Instantiate(dronesPrefab);
@@ -62,6 +60,8 @@ public class Drones : MonoBehaviour
         Text[] droneName = droneDisplay.GetComponentsInChildren<Text>();
         droneName[0].text = item.name;
         droneName[1].text = "0m";
+        droneDisplay.GetComponent<LookAtDrone>().PopUp = PopUp;
+        droneDisplay.GetComponent<LookAtDrone>().RenderTexture = PopUpRenderTexture;
         float distance = Vector3.Distance(drones[0].transform.position, item.transform.position);
         Debug.Log(distance);   
 
@@ -73,32 +73,38 @@ public class Drones : MonoBehaviour
         Color col = new Color(
         Random.Range(0f, 1f), 
         Random.Range(0f, 1f), 
-        Random.Range(0f, 1f)
+        Random.Range(0f, 1f),
+        0.9F
         );
         icon.GetComponent<Image>().color = col;
+        droneDisplay.transform.localScale = new Vector3(1,1,1);
 
         droneDisplay.transform.Find("Image").GetComponent<Image>().color = col;
     }
     
-    public static void LookFunction(int i){
-        if(GuiController.isMap){
-            Vector3 newPosition = drones[i].transform.position;
-            newPosition.y = Camera.main.transform.position.y;
-            Camera.main.transform.position = newPosition;
-        } else {
-            Transform Camera = drones[0].transform.Find("CameraBox/MainCameraPair");
-            Debug.Log(Camera.gameObject.name);
-            Camera.LookAt(Drones.drones[i].transform);
-        }
+    // public static void LookFunction(int i, GameObject PopUp){
+    //     PopUp.SetActive(true);
+
+
+    //     // if(GuiController.isMap){
+    //     //     Vector3 newPosition = drones[i].transform.position;
+    //     //     newPosition.y = Camera.main.transform.position.y;
+    //     //     Camera.main.transform.position = newPosition;
+    //     // } else {
+    //     //     Transform Camera = drones[0].transform.Find("CameraBox/MainCameraPair");
+    //     //     Debug.Log(Camera.gameObject.name);
+    //     //     Camera.LookAt(Drones.drones[i].transform);
+    //     // }   
         
-    }
+    // }
 
-    public static void DontLookFunction(int i){
-        if(GuiController.isMap){
+    // public static void DontLookFunction(int i,GameObject PopUp){
+    //     PopUp.SetActive(false);
+    //     // if(GuiController.isMap){
 
-        } else {
-        Transform Camera = drones[0].transform.Find("CameraBox/MainCameraPair");
-        Camera.LookAt(Drones.drones[0].transform);
-        }
-    }
+    //     // } else {
+    //     // Transform Camera = drones[0].transform.Find("CameraBox/MainCameraPair");
+    //     // Camera.LookAt(Drones.drones[0].transform);
+    //     // }
+    // }
 }

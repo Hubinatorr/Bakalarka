@@ -12,8 +12,12 @@ public class AddDrone : MonoBehaviour
 
     public Transform iconTransform;
     public GameObject icon;
+    public GameObject PopUp;
 
-    public void addDrone(Transform position){
+    public RenderTexture RenderTexture;
+
+    
+    public void addDrone(Transform position){ 
         Vector3 newPosition = position.position;
 
         GameObject Clone = Instantiate(newDrone, newPosition, ourDrone.rotation);
@@ -21,7 +25,7 @@ public class AddDrone : MonoBehaviour
         //DroneList.drones.Add(Clone);ß
         //DisplayDrones.dronesList.Add(Clone);
         Drones.drones.Add(Clone);
-        Drones.DroneAdded(tarfetTransform,dronesPrefab,iconTransform,icon);
+        Drones.DroneAdded(tarfetTransform,dronesPrefab,iconTransform,icon, PopUp, RenderTexture);
         Debug.Log(Clone.name + "added");
         droneNumber++;
         //Clone.GetComponent("DroneController").enabled = false;

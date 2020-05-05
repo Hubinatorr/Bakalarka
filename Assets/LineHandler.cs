@@ -15,11 +15,9 @@
     void Start(){
         int i = 0;
         foreach(Transform child in parent.transform){
-            if(i < 4){
                 GameObject empty = new GameObject("line");
                 empty.transform.SetParent(transform);
                 empty.AddComponent<LineRenderer>();
-            }
             i++;
         }
         i = 0;
@@ -30,8 +28,7 @@
          int i = 0;
          transform.gameObject.SetActive(true);
          foreach(Transform child in parent.transform){
-              if(i < 4){
-                  if(Vector3.Distance(transform.position,child.position) < 10){
+                  if(Vector3.Distance(transform.position,child.position) < 20){
                       transform.gameObject.SetActive(true);
                         LineRenderer[] lineRend = transform.GetComponentsInChildren<LineRenderer>(true);
                         LineRenderer tmp = lineRend[i];
@@ -52,9 +49,7 @@
                     LineRenderer[] lineRend = transform.GetComponentsInChildren<LineRenderer>(true);
                     LineRenderer tmp = lineRend[i];
                     tmp.gameObject.SetActive(false);
-                    
                   }
-              }
               i++;
          }
          i=0;

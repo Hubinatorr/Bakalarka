@@ -35,7 +35,7 @@ public class IconManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float minimumDistance = 50.0F;
+        float minimumDistance = distanceOfSight;
         float maximumDistance = 100.0F;
         
         float minimumDistanceScale = 1.0F;
@@ -50,10 +50,14 @@ public class IconManager : MonoBehaviour
 
         foreach(Transform child in iconTargetTransform.transform)
         {
+            // Ziskam text so vzdialenostou
             Text text = child.GetComponentInChildren<Text>();
+            // Ziskam vzdialenost
             float dist = Vector3.Distance(Drones.drones[0].transform.position,Drones.drones[i].transform.position);
             text.text = Mathf.Round(dist) + "m";
-            
+
+            // NASTAVITELNE
+
             float norm = (dist - minimumDistance) / (maximumDistance - minimumDistance);
             norm = Mathf.Clamp01(norm);
             
@@ -70,7 +74,8 @@ public class IconManager : MonoBehaviour
             // }
             Vector3 iconPos = cam.WorldToScreenPoint(Drones.drones[i].transform.position);
             _onScreen = cam.pixelRect.Contains( iconPos ) && iconPos.z > cam.nearClipPlane;
-            if(_onScreen && i!= 0){
+            
+            if(_onScreen && i!= 0 && dist > 20.0){
                 child.gameObject.SetActive(true);
             } else {
                 child.gameObject.SetActive(false);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mapbox.Unity.Map;
 using UnityEngine.UI;
+using System.IO;
 using RosSharp.RosBridgeClient;
 
 //vygeneruju budovy
@@ -40,13 +41,25 @@ public class DroneController : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-        //rb = GetComponent<Rigidbody>();
-        positionDataS = new DroneData(Map, transform.position);
-        positionData = positionDataM = new DroneDataManual(Map, transform.position);
-        positionDataR = new DroneRosData(Map, transform.position);
-        //DisplayDrones.dronesList.Add(transform.gameObject);
+        // Prvy dron je vzdy ten defaultny
+        string path = Application.streamingAssetsPath + "/mission.json";
+        string jsonContent =File.ReadAllText(path);
+
+        Mission mission = JsonUtility.FromJson<Mission>(jsonContent);
+        Vector3 pos;
+        Mapbox.Utils.Vector2d p = new Mapbox.Utils.Vector2d(mission.drones[0].latitude,mission.drones[0].longitude);
+        pos = Map.GeoToWorldPosition(p,false);
+        Debug.Log(pos);
+        float groundAltitude = Map.QueryElevationInUnityUnitsAt(Map.WorldToGeoPosition(pos));
+        pos.y = groundAltitude;
+        Debug.Log("thr" + pos);
+
+
+        positionDataS = new DroneData(Map, pos);
+        positionData = positionDataM = new DroneDataManual(Map, pos);
+        positionDataR = new DroneRosData(Map, pos);
         Drones.drones.Add(transform.gameObject);
-        Debug.Log(transform.name + "added");
+
     }
 
     public void ConnectToRos()  // může být voláno z GUI

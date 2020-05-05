@@ -9,6 +9,7 @@ TagManager:
   - PointMarker
   - WayPointButton
   - Map
+  - PopUp
   layers:
   - Default
   - TransparentFX
