@@ -6,7 +6,7 @@
     
      public GameObject parent;
 
-     public int dis = 20;
+     public int dis = 10;
  
     Color c1 = Color.white;
     Color c2 = new Color(1, 1, 1, 0);
@@ -28,7 +28,7 @@
          int i = 0;
          transform.gameObject.SetActive(true);
          foreach(Transform child in parent.transform){
-                  if(Vector3.Distance(transform.position,child.position) < 20){
+                  if(Vector3.Distance(transform.position,child.position) < dis){
                       transform.gameObject.SetActive(true);
                         LineRenderer[] lineRend = transform.GetComponentsInChildren<LineRenderer>(true);
                         LineRenderer tmp = lineRend[i];

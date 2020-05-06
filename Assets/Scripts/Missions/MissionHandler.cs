@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.UI;
 using Mapbox.Unity.Map;
 public class MissionHandler : MonoBehaviour
 {
@@ -29,6 +30,9 @@ public class MissionHandler : MonoBehaviour
 
     public List<int> droneIndexes;
 
+    public Text description;
+
+    public Transform selectorParent;
     public GameObject defaultDrone;
     public void addDrone(Vector3 position){ 
         Vector3 newPosition =position;
@@ -206,15 +210,29 @@ public class MissionHandler : MonoBehaviour
                         // Vzdialenost dronu od pointu v jeho liste
                         if(Vector3.Distance(Drones.drones[i].transform.position, drone.checkpoints[0].points[0].pointGameObject.transform.position) > offset){
                             // Chod k pointu
-                           
+
+                            foreach(Transform child in selectorParent){
+                                child.GetComponent<Image>().color = new Color(0.3301887F,0.3301887F,0.3301887F,0.6666667F);
+                            }
+                           description.text = "Reach "+  drone.checkpoints[0].name;
                         } else {
                             // Je uz tam
+                            description.text = "Wait for other drones";
                             if(droneIndexes.Contains(i)){
                                 droneIndexes.Remove(i);
                                 // Odcitam ten index
                                 mission.checkpoints.Find(Point => Point.name == drone.checkpoints[0].name).droneCount--;
                                 Debug.Log(mission.checkpoints.Find(Point => Point.name == drone.checkpoints[0].name).droneCount);
                             }
+                            int j = 0;
+                                foreach(Transform child in selectorParent){
+                                    if(droneIndexes.Contains(j) && drone.checkpoints[0].drones.Contains(mission.drones[j].name)){
+                                        child.GetComponent<Image>().color = new Color(0.5660378F,0.06674973F,0.06674973F,6666667F);
+                                    } else {
+                                        child.GetComponent<Image>().color = new Color(0.3301887F,0.3301887F,0.3301887F,0.6666667F);
+                                    }
+                                    j++;
+                                }
 
                             if(mission.checkpoints.Find(Point => Point.name == drone.checkpoints[0].name).droneCount == 0){
                                 droneIndexes.Add(i);
@@ -222,18 +240,32 @@ public class MissionHandler : MonoBehaviour
                             }
                         }
                     } else if(drone.checkpoints[0].type == "zone"){
+                        
                         // Posledny prvok je stred zony
                         int last_index = drone.checkpoints[0].points.Count-1;
                         if(Vector3.Distance(Drones.drones[i].transform.position, drone.checkpoints[0].points[last_index].pointGameObject.transform.position) > offset){
                             // Chod k stredu zony
-                            
+                            foreach(Transform child in selectorParent){
+                                child.GetComponent<Image>().color = new Color(0.3301887F,0.3301887F,0.3301887F,0.6666667F);
+                            }
+                            description.text = "Reach "+  drone.checkpoints[0].name;
                         } else {
                             // Je uz tam a este sa neodciatal
+                            description.text = "Wait for other drones";
                             if(droneIndexes.Contains(i)){
                                 droneIndexes.Remove(i);
                                 mission.checkpoints.Find(Point => Point.name == drone.checkpoints[0].name).droneCount--;
                                 Debug.Log(mission.checkpoints.Find(Point => Point.name == drone.checkpoints[0].name).droneCount);
                             }
+                            int j = 0;
+                                foreach(Transform child in selectorParent){
+                                    if(droneIndexes.Contains(j) && drone.checkpoints[0].drones.Contains(mission.drones[j].name)){
+                                        child.GetComponent<Image>().color = new Color(0.5660378F,0.06674973F,0.06674973F,6666667F);
+                                    } else {
+                                        child.GetComponent<Image>().color = new Color(0.3301887F,0.3301887F,0.3301887F,0.6666667F);
+                                    }
+                                    j++;
+                                }
 
                             if(mission.checkpoints.Find(Point => Point.name == drone.checkpoints[0].name).droneCount == 0){
                                 droneIndexes.Add(i);

@@ -50,13 +50,55 @@ public class IconManager : MonoBehaviour
 
         foreach(Transform child in iconTargetTransform.transform)
         {
-            // Ziskam text so vzdialenostou
+            Image img = child.GetComponent<Image>();
+
+            float minX = img.GetPixelAdjustedRect().width / 2;
+            // Maximum X position: screen width - half of the icon width
+            float maxX = Screen.width - minX;
+
+            // Minimum Y position: half of the height
+            float minY = img.GetPixelAdjustedRect().height / 2;
+            // Maximum Y position: screen height - half of the icon height
+            float maxY = Screen.height - minY;
+
+            // Temporary variable to store the converted position from 3D world point to 2D screen point
+            Vector2 pos = cam.WorldToScreenPoint(Drones.drones[i].transform.position);
+            
+            if(Vector3.Dot((Drones.drones[i].transform.position - cam.transform.position), cam.transform.forward) < 0)
+            {
+            // Check if the target is on the left side of the screen
+            if(pos.x < Screen.width / 2)
+            {
+                // Place it on the right (Since it's behind the player, it's the opposite)
+                pos.x = maxX;
+            }
+            else
+            {
+                // Place it on the left side
+                pos.x = minX;
+            }
+            }
+
+        // Limit the X and Y positions
+        pos.x = Mathf.Clamp(pos.x, minX, maxX);
+        pos.y = Mathf.Clamp(pos.y, minY, maxY);
+
+        // Update the marker's position
+        img.transform.position = pos;
+
+            // // Ziskam text so vzdialenostou
             Text text = child.GetComponentInChildren<Text>();
             // Ziskam vzdialenost
             float dist = Vector3.Distance(Drones.drones[0].transform.position,Drones.drones[i].transform.position);
             text.text = Mathf.Round(dist) + "m";
 
-            // NASTAVITELNE
+            // // NASTAVITELNE
+
+            if(dist < 10.0F){
+                child.gameObject.SetActive(false);
+            } else {
+                child.gameObject.SetActive(true);
+            }
 
             float norm = (dist - minimumDistance) / (maximumDistance - minimumDistance);
             norm = Mathf.Clamp01(norm);
@@ -65,29 +107,29 @@ public class IconManager : MonoBehaviour
             var maxScale = Vector3.one * minimumDistanceScale;
             
             child.transform.localScale = Vector3.Lerp(maxScale, minScale, norm);
-            // if(!Drones.drones[i].GetComponent<Renderer>().isVisible){
+            // // if(!Drones.drones[i].GetComponent<Renderer>().isVisible){
+            // //     child.gameObject.SetActive(false);
+            // // }
+
+            // // if(Drones.drones[i].GetComponent<Renderer>().isVisible){
+            // //     child.gameObject.SetActive(true);
+            // // }
+            // Vector3 iconPos = cam.WorldToScreenPoint(Drones.drones[i].transform.position);
+            // _onScreen = cam.pixelRect.Contains( iconPos ) && iconPos.z > cam.nearClipPlane;
+            
+            // if(_onScreen && i!= 0 && dist > 20.0){
+            //     child.gameObject.SetActive(true);
+            // } else {
             //     child.gameObject.SetActive(false);
             // }
 
-            // if(Drones.drones[i].GetComponent<Renderer>().isVisible){
+            // if(_onScreen && i== 0 && GuiController.isMap)
             //     child.gameObject.SetActive(true);
-            // }
-            Vector3 iconPos = cam.WorldToScreenPoint(Drones.drones[i].transform.position);
-            _onScreen = cam.pixelRect.Contains( iconPos ) && iconPos.z > cam.nearClipPlane;
-            
-            if(_onScreen && i!= 0 && dist > 20.0){
-                child.gameObject.SetActive(true);
-            } else {
-                child.gameObject.SetActive(false);
-            }
-
-            if(_onScreen && i== 0 && GuiController.isMap)
-                child.gameObject.SetActive(true);
-            child.transform.position = iconPos;
+            // child.transform.position = iconPos;
+            // i++;
+            // if(child.transform.position != iconPos)
+            //     child.transform.position = iconPos;
             i++;
-            if(child.transform.position != iconPos)
-                child.transform.position = iconPos;
-
         }
          i=0;
     }
