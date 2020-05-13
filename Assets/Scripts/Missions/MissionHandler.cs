@@ -135,8 +135,14 @@ public class MissionHandler : MonoBehaviour
                 }
 
                 i= 0;
+                float y = 0;
                 // Natiahni hranice zony
                 foreach(var current in item.points){
+                    current.pointGameObject.layer = 13;
+                    if(i == 0)
+                        y = current.pointGameObject.transform.position.y;
+
+                    current.pointGameObject.transform.position = new Vector3(current.pointGameObject.transform.position.x,y,current.pointGameObject.transform.position.z);
                     float distance;
                     if(i == item.points.Count -1){
                         distance = Vector3.Distance(current.pointGameObject.transform.position,item.points[0].pointGameObject.transform.position);
@@ -147,7 +153,15 @@ public class MissionHandler : MonoBehaviour
                         current.pointGameObject.transform.LookAt(item.points[i+1].pointGameObject.transform);
                         current.pointGameObject.transform.localScale = new Vector3(current.pointGameObject.transform.localScale.x,current.pointGameObject.transform.localScale.y,distance);
                     }
-                    i++;    
+
+                    i++;   
+                    current.pointGameObject.transform.eulerAngles = new Vector3(
+                        0,
+                        current.pointGameObject.transform.eulerAngles.y,
+                        0
+                    );
+
+
                 }
                 i =0;
                 foreach(var current in item.points){
@@ -193,7 +207,7 @@ public class MissionHandler : MonoBehaviour
         }
     }
     public float offset = 1.0F;
-
+    public float zoneOffset = 100.0F;
     void Update(){
         if(mission.drones[0].checkpoints.Count > 0)
             if(mission.drones[0].checkpoints[0].type == "regular")
@@ -201,6 +215,18 @@ public class MissionHandler : MonoBehaviour
             else if(mission.drones[0].checkpoints[0].type == "zone")
                 homepad.transform.position = mission.drones[0].checkpoints[0].points[mission.drones[0].checkpoints[0].points.Count-1].pointGameObject.transform.position;
         int i = 0;
+        foreach(Transform child in tarfetTransform.transform)
+                {
+                    Text height = child.Find("Height").GetComponent<Text>();
+                    Text objective = child.Find("Objective").GetComponent<Text>();
+                    float droneAltitude = 0.0f;
+                    droneAltitude = Drones.drones[i].transform.localPosition.y - Map.QueryElevationInUnityUnitsAt(Map.WorldToGeoPosition(Drones.drones[i].transform.position));
+                    height.text = "Height:" + Mathf.Round(droneAltitude) + "m";
+                    objective.text = "Objective: " + mission.drones[i].checkpoints[0].name;
+                    i++;
+                }
+                i=0;
+
         foreach(var drone in mission.drones){
             // Prvy dron, ten ktory ovladas
             if(i == 0){
@@ -243,7 +269,7 @@ public class MissionHandler : MonoBehaviour
                         
                         // Posledny prvok je stred zony
                         int last_index = drone.checkpoints[0].points.Count-1;
-                        if(Vector3.Distance(Drones.drones[i].transform.position, drone.checkpoints[0].points[last_index].pointGameObject.transform.position) > offset){
+                        if(Vector3.Distance(Drones.drones[i].transform.position, drone.checkpoints[0].points[last_index].pointGameObject.transform.position) > zoneOffset){
                             // Chod k stredu zony
                             foreach(Transform child in selectorParent){
                                 child.GetComponent<Image>().color = new Color(0.3301887F,0.3301887F,0.3301887F,0.6666667F);
@@ -269,6 +295,11 @@ public class MissionHandler : MonoBehaviour
 
                             if(mission.checkpoints.Find(Point => Point.name == drone.checkpoints[0].name).droneCount == 0){
                                 droneIndexes.Add(i);
+                                var zone = mission.checkpoints.Find(Point => Point.name == drone.checkpoints[0].name).points;
+                                foreach(var point in zone){
+                                    Color green = new Color(0.03921568F,0.9333333F,0.1818267F,0.5882353F);
+                                    point.pointGameObject.GetComponent<Renderer>().material.SetColor("_Color",green);
+                                }
                                 drone.checkpoints.RemoveAt(0);
                             }
                         }
@@ -287,6 +318,7 @@ public class MissionHandler : MonoBehaviour
                 //         drone.checkpoints.RemoveAt(0);
                 //     }
                 // }
+
             } else { // Ostatne drony
                 // Ak ma este misiu
                 if(drone.checkpoints.Count > 0){
@@ -313,7 +345,7 @@ public class MissionHandler : MonoBehaviour
                     } else if(drone.checkpoints[0].type == "zone"){
                         // Posledny prvok je stred zony
                         int last_index = drone.checkpoints[0].points.Count-1;
-                        if(Vector3.Distance(Drones.drones[i].transform.position, drone.checkpoints[0].points[last_index].pointGameObject.transform.position) > offset){
+                        if(Vector3.Distance(Drones.drones[i].transform.position, drone.checkpoints[0].points[last_index].pointGameObject.transform.position) > zoneOffset){
                             // Chod k stredu zony
                             Drones.drones[i].transform.position = Vector3.MoveTowards(Drones.drones[i].transform.position, drone.checkpoints[0].points[last_index].pointGameObject.transform.position, Time.deltaTime * speed);
                         } else {
@@ -326,6 +358,11 @@ public class MissionHandler : MonoBehaviour
 
                             if(mission.checkpoints.Find(Point => Point.name == drone.checkpoints[0].name).droneCount == 0){
                                 droneIndexes.Add(i);
+                                var zone = mission.checkpoints.Find(Point => Point.name == drone.checkpoints[0].name).points;
+                                foreach(var point in zone){
+                                     Color green = new Color(0.03921568F,0.9333333F,0.1818267F,0.5882353F);
+                                    point.pointGameObject.GetComponent<Renderer>().material.SetColor("_Color",green);
+                                }
                                 drone.checkpoints.RemoveAt(0);
                             }
                         }
