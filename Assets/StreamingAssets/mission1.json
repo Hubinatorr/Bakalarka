@@ -72,7 +72,7 @@
                 }
             ]    
         },{
-            "drones":["Drone1","Drone2"],
+            "drones":["Drone1"],
             "type":"zone",
             "name":"FIT",
             "points":[
@@ -98,7 +98,7 @@
                 }
             ]
         },{
-            "drones":["Drone1","Drone2"],
+            "drones":["Drone1"],
             "type":"regular",
             "name":"Point 5",
             "points":[
@@ -110,7 +110,7 @@
             ]    
         },
         {
-            "drones":["Drone1","Drone2"],
+            "drones":["Drone1"],
             "type":"regular",
             "name":"Point 6",
             "points":[
@@ -121,7 +121,7 @@
                 }
             ]    
         },{
-            "drones":["Drone1","Drone2"],
+            "drones":["Drone1"],
             "type":"regular",
             "name":"Point 7",
             "points":[
@@ -132,7 +132,7 @@
                 }
             ]    
         },{
-            "drones":["Drone1","Drone2"],
+            "drones":["Drone1"],
             "type":"regular",
             "name":"Final Point",
             "points":[
@@ -151,11 +151,6 @@
             "name":"Drone1",
             "latitude":49.226633, 
             "longitude": 16.577960
-        },
-        {
-            "name":"Drone2",
-            "latitude":49.225126, 
-            "longitude": 16.580086
         }
     ]
 

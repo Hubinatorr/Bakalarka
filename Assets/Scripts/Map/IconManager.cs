@@ -16,6 +16,8 @@ public class IconManager : MonoBehaviour
 
     public GameObject Drone;
 
+    public Transform middle;
+ 
 
     public int distanceOfSight = 50;
     
@@ -51,15 +53,19 @@ public class IconManager : MonoBehaviour
         foreach(Transform child in iconTargetTransform.transform)
         {
             Image img = child.GetComponent<Image>();
+            Image arrow = child.transform.Find("Arrow").GetComponent<Image>();
+            // arrow.gameObject.transform.LookAt(middle);
+            arrow.gameObject.transform.right = middle.position - arrow.gameObject.transform.transform.position;
+            arrow.color = img.color;
 
-            float minX = img.GetPixelAdjustedRect().width / 2;
+             float minX = img.GetPixelAdjustedRect().width / 2+1;
             // Maximum X position: screen width - half of the icon width
-            float maxX = Screen.width - minX;
+            float maxX = Screen.width*0.81f - minX-1;
 
             // Minimum Y position: half of the height
-            float minY = img.GetPixelAdjustedRect().height / 2;
+            float minY = Screen.height*0.08f + img.GetPixelAdjustedRect().height / 2 +1;
             // Maximum Y position: screen height - half of the icon height
-            float maxY = Screen.height - minY;
+            float maxY = Screen.height*0.96f - img.GetPixelAdjustedRect().height / 2 -2;
 
             // Temporary variable to store the converted position from 3D world point to 2D screen point
             Vector2 pos = cam.WorldToScreenPoint(Drones.drones[i].transform.position);
@@ -107,6 +113,8 @@ public class IconManager : MonoBehaviour
             var maxScale = Vector3.one * minimumDistanceScale;
             
             child.transform.localScale = Vector3.Lerp(maxScale, minScale, norm);
+
+            
             // // if(!Drones.drones[i].GetComponent<Renderer>().isVisible){
             // //     child.gameObject.SetActive(false);
             // // }
@@ -114,14 +122,17 @@ public class IconManager : MonoBehaviour
             // // if(Drones.drones[i].GetComponent<Renderer>().isVisible){
             // //     child.gameObject.SetActive(true);
             // // }
-            // Vector3 iconPos = cam.WorldToScreenPoint(Drones.drones[i].transform.position);
-            // _onScreen = cam.pixelRect.Contains( iconPos ) && iconPos.z > cam.nearClipPlane;
+            Vector3 iconPos = cam.WorldToScreenPoint(Drones.drones[i].transform.position);
+            _onScreen = cam.pixelRect.Contains( iconPos ) && iconPos.z > cam.nearClipPlane;
             
-            // if(_onScreen && i!= 0 && dist > 20.0){
-            //     child.gameObject.SetActive(true);
-            // } else {
-            //     child.gameObject.SetActive(false);
-            // }
+            // && dist > 20.0
+            if(_onScreen && i!= 0){
+                img.enabled = true;
+                arrow.enabled = false;
+            } else {
+                img.enabled = false;
+                arrow.enabled = true;
+            }
 
             // if(_onScreen && i== 0 && GuiController.isMap)
             //     child.gameObject.SetActive(true);

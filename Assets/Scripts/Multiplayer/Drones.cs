@@ -79,7 +79,7 @@ public class Drones : MonoBehaviour
         icon.GetComponent<Image>().color = col;
         droneDisplay.transform.localScale = new Vector3(1,1,1);
 
-        droneDisplay.transform.Find("Image").GetComponent<Image>().color = col;
+        droneDisplay.transform.Find("Icon").GetComponent<Image>().color = col;
     }
     
     // public static void LookFunction(int i, GameObject PopUp){
