@@ -72,33 +72,7 @@
                 }
             ]    
         },{
-            "drones":["Drone1","Drone2"],
-            "type":"zone",
-            "name":"FIT",
-            "points":[
-                {
-                    "height": 200,
-                    "latitude": 49.227129, 
-                    "longitude":16.593017
-                },
-                {
-                    "height": 200,
-                    "latitude": 49.225454, 
-                    "longitude": 16.594176
-                },
-                {
-                    "height": 200,
-                    "latitude": 49.226259, 
-                    "longitude": 16.598622
-                },
-                {
-                    "height": 200,
-                    "latitude": 49.228157, 
-                    "longitude": 16.597986
-                }
-            ]
-        },{
-            "drones":["Drone1","Drone2"],
+            "drones":["Drone1"],
             "type":"regular",
             "name":"Point 5",
             "points":[
@@ -110,7 +84,7 @@
             ]    
         },
         {
-            "drones":["Drone1","Drone2"],
+            "drones":["Drone1"],
             "type":"regular",
             "name":"Point 6",
             "points":[
@@ -121,7 +95,7 @@
                 }
             ]    
         },{
-            "drones":["Drone1","Drone2"],
+            "drones":["Drone1"],
             "type":"regular",
             "name":"Point 7",
             "points":[
@@ -132,7 +106,7 @@
                 }
             ]    
         },{
-            "drones":["Drone1","Drone2"],
+            "drones":["Drone1"],
             "type":"regular",
             "name":"Final Point",
             "points":[
@@ -151,11 +125,6 @@
             "name":"Drone1",
             "latitude":49.226633, 
             "longitude": 16.577960
-        },
-        {
-            "name":"Drone2",
-            "latitude":49.225126, 
-            "longitude": 16.580086
         }
     ]
 

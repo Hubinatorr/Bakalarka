@@ -35,6 +35,9 @@ public class MissionHandler : MonoBehaviour
     public Transform selectorParent;
     public GameObject defaultDrone;
 
+    Mesh mesh;
+    Vector3[] vertices;
+    int [] triangles;
 
     // Defaultly the first drone is 
     private int activeDrone = 0;
@@ -89,127 +92,137 @@ public class MissionHandler : MonoBehaviour
         WayPointPointer.transform.position = position;
         WayPointPointer.name = item.name;
         item.points[0].pointGameObject = WayPointPointer;
-        foreach(var name in item.drones){
-            foreach(var drone in mission.drones){
-                if(drone.name == name){
-                    drone.checkpoints.Add(item);
-                }
-            }
-        }
     }
 
 
+    private void GenerateZone(Checkpoint checkpoint){
+
+        GameObject ZoneGameObject = new GameObject(checkpoint.name);
+        ZoneGameObject.transform.position = new Vector3(0,0,0);
+        ZoneGameObject.transform.SetParent(transform);
+        ZoneGameObject.layer =13;
+        ZoneGameObject.AddComponent<MeshFilter>();
+        ZoneGameObject.AddComponent<MeshRenderer>().material = Resources.Load<Material>("Zones/WayPointMaterial");
+        List <Vector3> points = new List<Vector3>();
+
+        // Minimalna groundAltitude aby zona nelevitovala
+        float minAltitude = float.MaxValue;
+
+        // Ziskam list bodov zony
+        int j = 0;
+        foreach(var point in checkpoint.points){
+            GameObject WayPointPointer = Instantiate(Resources.Load<GameObject>("Zones/ZoneWall")); 
+            WayPointPointer.transform.SetParent(ZoneGameObject.transform);
+
+            // Vytvor vektor z gps
+            Mapbox.Utils.Vector2d position2d = new Mapbox.Utils.Vector2d(point.latitude,point.longitude);
+            // // Ziskaj poziciu
+            Vector3 position = Map.GeoToWorldPosition(position2d,false);
+            // Ziskaj vysku
+            groundAltitude = Map.QueryElevationInUnityUnitsAt(Map.WorldToGeoPosition(position));
+            if(groundAltitude < minAltitude)
+                minAltitude= groundAltitude;
+            position.y = groundAltitude + (float)point.height;
+            points.Add(position);
+            WayPointPointer.transform.position = position;
+            checkpoint.points[j].pointGameObject = WayPointPointer;
+            j++;
+        }
+
+        mesh = new Mesh();
+        ZoneGameObject.GetComponent<MeshFilter>().mesh = mesh;
+        // Pridaj samostatny prvok^^ TODO
+        List<Vector3> verticesList = new List<Vector3>();
+        List<int> trianglesList = new List<int>();
+        int multiplier;
+
+        // Ziskam pointy a trojuholniky z nich
+        for(int i = 0; i < points.Count-1; i++){
+            multiplier = i*4;
+            
+            verticesList.AddRange(new List<Vector3>(){
+                points[i],
+                points[i+1],
+                new Vector3(points[i].x,minAltitude,points[i].z),
+                new Vector3(points[i+1].x,minAltitude,points[i+1].z)
+            });
+
+
+            trianglesList.AddRange(new int[]{
+                0+multiplier ,1+multiplier ,2+multiplier,
+                0+multiplier ,2+multiplier ,1+multiplier,
+                1+multiplier ,2+multiplier ,3+multiplier,
+                1+multiplier ,3+multiplier ,2+multiplier
+            });
+        } 
+
+        // Poslednu stenu treba spojit s prvou
+        multiplier = (points.Count-1)*4;
+        verticesList.AddRange(new List<Vector3>(){
+            points[points.Count-1],
+            points[0],
+            new Vector3(points[points.Count-1].x,minAltitude,points[points.Count-1].z),
+            new Vector3(points[0].x,minAltitude,points[0].z)
+        });
+
+
+        trianglesList.AddRange(new int[]{
+            0+multiplier ,1+multiplier ,2+multiplier,
+            0+multiplier ,2+multiplier ,1+multiplier,
+            1+multiplier ,2+multiplier ,3+multiplier,
+            1+multiplier ,3+multiplier ,2+multiplier
+        });
+
+        vertices = verticesList.ToArray();
+        triangles = trianglesList.ToArray();
+        mesh.Clear();
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;  
+        
+        GenerateMiddlePoint(checkpoint).transform.SetParent(ZoneGameObject.transform);
+    }
+
+    GameObject GenerateMiddlePoint(Checkpoint checkpoint){
+        GameObject Middle = Instantiate(Resources.Load<GameObject>("Zones/ZoneWall"));
+        Vector3 center = new Vector3(0, 0, 0);
+        float count = 0;
+        foreach (var pointOfZone in checkpoint.points){
+            center += pointOfZone.pointGameObject.transform.position;
+            count++;
+        }
+        var theCenter = center / count;
+        Middle.transform.position = theCenter;
+        Middle.name = checkpoint.name;
+        
+        Point centerPoint = new Point();
+        centerPoint.pointGameObject = Middle;
+        checkpoint.points.Add(centerPoint);
+        return Middle;
+    }
+
     void Start()
     {
-        
-        int i = 0;
         LoadJsonData();
         FillIndexes();
         // Nastavime drony
         SetupDrones();
 
-        i = 0;
         foreach(var checkpoint in mission.checkpoints){
             checkpoint.droneCount = checkpoint.drones.Count;
             // Drony dostanu misiu
             if(checkpoint.type == "regular"){
                 GeneratePoint(checkpoint);
             } else if(checkpoint.type == "zone"){
-                // Vytvor hranice zony
-                GameObject tmp = new GameObject(checkpoint.name);
-                tmp.transform.position = new Vector3(0,0,0);
-                tmp.transform.SetParent(transform);
-                foreach(var point in checkpoint.points){
-                    GameObject WayPointPointerPrefab;
-                    WayPointPointerPrefab = Resources.Load<GameObject>("Zones/ZoneWall");
-                    
-                    GameObject WayPointPointer = Instantiate(WayPointPointerPrefab);
-                    
-                    WayPointPointer.transform.SetParent(tmp.transform);
-                        // Vytvor vektor z gps
-                    Mapbox.Utils.Vector2d p = new Mapbox.Utils.Vector2d(point.latitude,point.longitude);
-                        // // Ziskaj poziciu
-                    Vector3 position = Map.GeoToWorldPosition(p,false);
-                        // Ziskaj vysku
-                    groundAltitude = Map.QueryElevationInUnityUnitsAt(Map.WorldToGeoPosition(position));
-                    // Polovica pretoze sa scaluje zo stredu
-                    position.y = groundAltitude + ((float)point.height/2);
-                    
-                    WayPointPointer.transform.localScale = new Vector3(1,(float)point.height,1); 
-                    WayPointPointer.transform.position = position;
-                    checkpoint.points[i].pointGameObject = WayPointPointer;
-                    i++;
-                }
+                GenerateZone(checkpoint);
+            }
 
-                i= 0;
-                float y = 0;
-                // Natiahni hranice zony
-                foreach(var current in checkpoint.points){
-                    current.pointGameObject.layer = 13;
-                    if(i == 0)
-                        y = current.pointGameObject.transform.position.y;
-
-                    current.pointGameObject.transform.position = new Vector3(current.pointGameObject.transform.position.x,y,current.pointGameObject.transform.position.z);
-                    float distance;
-                    if(i == checkpoint.points.Count -1){
-                        distance = Vector3.Distance(current.pointGameObject.transform.position,checkpoint.points[0].pointGameObject.transform.position);
-                        current.pointGameObject.transform.LookAt(checkpoint.points[0].pointGameObject.transform);
-                        current.pointGameObject.transform.localScale = new Vector3(current.pointGameObject.transform.localScale.x,current.pointGameObject.transform.localScale.y,distance);
-                    }else{
-                        distance = Vector3.Distance(current.pointGameObject.transform.position,checkpoint.points[i+1].pointGameObject.transform.position);
-                        current.pointGameObject.transform.LookAt(checkpoint.points[i+1].pointGameObject.transform);
-                        current.pointGameObject.transform.localScale = new Vector3(current.pointGameObject.transform.localScale.x,current.pointGameObject.transform.localScale.y,distance);
-                    }
-
-                    i++;   
-                    current.pointGameObject.transform.eulerAngles = new Vector3(
-                        0,
-                        current.pointGameObject.transform.eulerAngles.y,
-                        0
-                    );
-
-
-                }
-                i =0;
-                foreach(var current in checkpoint.points){
-                    float distance;
-                    if(i == checkpoint.points.Count -1){
-                        distance = Vector3.Distance(current.pointGameObject.transform.position,checkpoint.points[0].pointGameObject.transform.position);
-                        current.pointGameObject.transform.position = current.pointGameObject.transform.position + distance/2 * current.pointGameObject.transform.forward;
-                    }else{
-                        distance = Vector3.Distance(current.pointGameObject.transform.position,checkpoint.points[i+1].pointGameObject.transform.position);
-                        current.pointGameObject.transform.position = current.pointGameObject.transform.position + distance/2 * current.pointGameObject.transform.forward;
-                    }
-                    i++;    
-                }
-                i=0;
-                // Dronovi priradime misiu
-                foreach(var name in checkpoint.drones){
-                    foreach(var drone in mission.drones){
-                        if(drone.name == name){
-                            drone.checkpoints.Add(checkpoint);
-                        }
+            // Priradim kompetentnym dronom missiu
+            foreach(var name in checkpoint.drones){
+                foreach(var drone in mission.drones){
+                    if(drone.name == name){
+                        drone.checkpoints.Add(checkpoint);
                     }
                 }
-
-
-                // Centrum zony pre navigaciu
-                GameObject PointerPrefab;
-                PointerPrefab = Resources.Load<GameObject>("Zones/ZoneWall");
-                GameObject Middle = Instantiate(PointerPrefab);
-                Vector3 center = new Vector3(0, 0, 0);
-                float count = 0;
-                foreach (var pointOfZone in checkpoint.points){
-                    center += pointOfZone.pointGameObject.transform.position;
-                    count++;
-                }
-                var theCenter = center / count;
-                Middle.transform.position = theCenter;
-                Middle.name = checkpoint.name;
-                Middle.transform.SetParent(tmp.transform);
-                Point centerPoint = new Point();
-                centerPoint.pointGameObject = Middle;
-                checkpoint.points.Add(centerPoint);
             }
         }
     }
@@ -381,7 +394,6 @@ public class MissionHandler : MonoBehaviour
     }
 
 }
-
 
 
 [System.Serializable]
