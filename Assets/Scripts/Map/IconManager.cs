@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class IconManager : MonoBehaviour
 {
@@ -93,7 +94,7 @@ public class IconManager : MonoBehaviour
         img.transform.position = pos;
 
             // // Ziskam text so vzdialenostou
-            Text text = child.GetComponentInChildren<Text>();
+            TextMeshProUGUI text = child.GetComponentInChildren<TextMeshProUGUI>();
             // Ziskam vzdialenost
             float dist = Vector3.Distance(Drones.drones[0].transform.position,Drones.drones[i].transform.position);
             text.text = Mathf.Round(dist) + "m";

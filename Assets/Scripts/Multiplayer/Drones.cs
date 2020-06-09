@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+using TMPro;
+
 
 public class Drones : MonoBehaviour
 {
@@ -12,7 +14,7 @@ public class Drones : MonoBehaviour
 
     public Transform tarfetTransform;
     public GameObject dronesPrefab;
-    private Text[] droneName;
+    private TextMeshProUGUI[] droneName;
     public Camera c;
     float distance = 0;
 
@@ -29,7 +31,7 @@ public class Drones : MonoBehaviour
         {
             GameObject droneDisplay = (GameObject)Instantiate(dronesPrefab);
             droneDisplay.transform.SetParent(tarfetTransform);
-            droneName = droneDisplay.GetComponentsInChildren<Text>();
+            droneName = droneDisplay.GetComponentsInChildren<TextMeshProUGUI>();
             droneName[0].text = item.name;
             droneName[1].text = drones.Count.ToString();
             droneDisplay.transform.localScale = new Vector3(1,1,1);
@@ -44,7 +46,7 @@ public class Drones : MonoBehaviour
     {
         foreach(Transform child in tarfetTransform.transform)
         {
-            droneName = child.GetComponentsInChildren<Text>();
+            droneName = child.GetComponentsInChildren<TextMeshProUGUI>();
             distance = Vector3.Distance(drones[0].transform.position,drones[i].transform.position);
             droneName[1].text = Mathf.Round(distance) + "m";
             i++;
@@ -57,7 +59,7 @@ public class Drones : MonoBehaviour
         GameObject item = drones[drones.Count - 1];
         GameObject droneDisplay = (GameObject)Instantiate(dronesPrefab);
         droneDisplay.transform.SetParent(tarfetTransform);
-        Text[] droneName = droneDisplay.GetComponentsInChildren<Text>();
+        TextMeshProUGUI[] droneName = droneDisplay.GetComponentsInChildren<TextMeshProUGUI>();
         droneName[0].text = item.name;
         droneName[1].text = "0m";
         droneDisplay.GetComponent<LookAtDrone>().PopUp = PopUp;

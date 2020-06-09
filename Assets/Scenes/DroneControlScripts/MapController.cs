@@ -16,8 +16,16 @@ public class MapController : MonoBehaviour {
         Map.Options.locationOptions.latitudeLongitude = PlayerPrefs.GetString("MapCenter");
         RangeTileProviderOptions options = Map.Options.extentOptions.GetTileProviderOptions() as RangeTileProviderOptions;
         options.west = options.south = options.north = options.east = PlayerPrefs.GetInt("MapSize");
+        Invoke("AddMeshCollider",1);
+        
     }
-	
+	void AddMeshCollider(){
+        foreach(Transform child in transform){
+           foreach(Transform building in child){
+               building.gameObject.AddComponent<MeshCollider>();
+           }
+        } 
+    }
 	// Update is called once per frame
 	void Update () {   
         if (Input.GetKeyUp("v"))

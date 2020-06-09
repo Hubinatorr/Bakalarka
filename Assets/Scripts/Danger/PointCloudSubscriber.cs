@@ -12,7 +12,7 @@ using Object = UnityEngine.Object;
 [RequireComponent(typeof (MeshFilter))]
 public class PointCloudSubscriber : MonoBehaviour
 {
-	
+	private List<Vector3> VectorList;
 	public string uri = "ws://192.168.56.101:9090";
 	private RosSocket rosSocket;
 	string subscriptionId = "";
@@ -95,6 +95,8 @@ public class PointCloudSubscriber : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
+
+		VectorList = new List<Vector3>();
 		
 		mesh = new Mesh(); 
 		GetComponent<MeshFilter>().mesh = mesh;
@@ -253,7 +255,10 @@ public class PointCloudSubscriber : MonoBehaviour
 		{
 			newverts[i] = new Vector3(Points[i].x, Points[i].z ,Points[i].y);
 			y_array[i] = newverts[i].y;
+			VectorList.Add(newverts[i]);
 		}
+
+
 
 		float inc = 0.15f;
 
@@ -456,10 +461,8 @@ public class PointCloudSubscriber : MonoBehaviour
 		index++;
 		if(index == 6){
 			index=0;
-			}
 		}
-			
-
+	}
 		update_mesh = true;
 
 	}

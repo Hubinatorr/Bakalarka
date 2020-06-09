@@ -5,6 +5,7 @@ using Mapbox.Unity.Map;
 using UnityEngine.UI;
 using System.IO;
 using RosSharp.RosBridgeClient;
+using TMPro;
 
 //vygeneruju budovy
 /*
@@ -23,8 +24,8 @@ public class DroneController : MonoBehaviour {
     public GameObject rosConnectorPrefab;
     public GameObject droneCamera; //model kamery
     public AbstractMap Map;
-    public Text heightText;
-    public Text ConnectorText;
+    public TextMeshProUGUI heightText;
+    public TextMeshProUGUI ConnectorText;
 
     public GameObject videoObjects;
     public GameObject videoScreen;

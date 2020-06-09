@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using TMPro;
 
 public class LookAtDrone : MonoBehaviour
 {
-    private Text[] droneName;
+    private TextMeshProUGUI[] droneName;
     private Transform defaultView;
 
 
@@ -16,7 +17,7 @@ public class LookAtDrone : MonoBehaviour
     public RenderTexture RenderTexture; 
     int i;
     public void LookDrone(){
-        droneName = transform.GetComponentsInChildren<Text>();
+        droneName = transform.GetComponentsInChildren<TextMeshProUGUI>();
         i = Int32.Parse(droneName[0].text.Substring(droneName[0].text.Length -1));
         // Camera.LookAt(Drones.drones[i].transform);
         PopUp.SetActive(true);
@@ -30,7 +31,7 @@ public class LookAtDrone : MonoBehaviour
     }
 
     public void DontLookDrone(){
-        droneName = transform.GetComponentsInChildren<Text>();
+        droneName = transform.GetComponentsInChildren<TextMeshProUGUI>();
         i = Int32.Parse(droneName[0].text.Substring(droneName[0].text.Length -1));
          Camera PopUpCamera;
         PopUpCamera = Drones.drones[i].transform.Find("TopCamera").GetComponent<Camera>();
